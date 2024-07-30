@@ -36,7 +36,7 @@ Configuration files are located in the directory `configs`
 
 Parameters:
 
-`DROPLET_NAME` - (Required) The name assigned to the DigitalOcean droplet. 
+`DROPLET_NAME` - (Required) The name assigned to the DigitalOcean droplet.
 Example: `"puppeteer-test"`
 
 `DROPLET_REGION` - (Required) The region where the DigitalOcean
@@ -62,7 +62,6 @@ If no name is specified, all existing keys on DigitalOcean will be added to the 
 
 `DO_PROJECT_NAME` - (Optional)The name of the project in
 DigitalOcean where the droplet will be moved to.
-
 
 ### puppeteer_chrome_config.json - Configuration file required to run puppeteer tests
 
