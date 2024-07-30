@@ -9,6 +9,10 @@ from tempfile import gettempdir
 from .file_paths import FilePaths
 
 class PuppeteerRunScript:
+    """
+    A class to generate and manage the execution of a bash script that installs necessary dependencies,
+    sets up the environment, and runs a Puppeteer script for testing.
+    """
 
     def __init__(
             self,
@@ -17,6 +21,13 @@ class PuppeteerRunScript:
             script_name: str = None,
             flags: dict = None
     ):
+        """
+        Initialize the PuppeteerRunScript with configuration, optional script directory, script name, and flags.
+        :param config: Configuration for Puppeteer, specifying the browser type and other settings.
+        :param script_dir: The directory where the script will be saved. Defaults to a temporary directory.
+        :param script_name: The name of the script file. Defaults to a predefined name.
+        :param flags: A dictionary of flags to pass to the Puppeteer script. Defaults to None.
+        """
         self.path = FilePaths()
         self.file_name = script_name or self.path.puppeter_run_sh_name
         self.home_dir = self.path.remote_home_dir
@@ -26,6 +37,10 @@ class PuppeteerRunScript:
 
     @property
     def generate(self):
+        """
+        Generate the content of the bash script for setting up and running the Puppeteer test.
+        :return: The generated bash script content as a string.
+        """
         browser_installation = (
             "sudo apt-get install firefox -y" if self.config.browser.lower() == 'firefox'
             else ""
@@ -71,11 +86,19 @@ zip -r '{self.path.remote_result_archive}' {basename(self.path.remote_report_dir
         """.strip()
 
     def create(self):
+        """
+        Create the bash script file with the generated content.
+        :return: The path to the created bash script file.
+        """
         with open(self.script_path, mode='w', newline='') as file:
             file.write('\n'.join(line.strip() for line in self.generate.split('\n')))
         return self.script_path
 
     def _get_flags(self):
+        """
+        Generate a string of flags to pass to the Puppeteer script.
+        :return: A string of flags to be appended to the Puppeteer run command.
+        """
         if not self.flags:
             return ''
 
