@@ -66,7 +66,7 @@ Read more about the parameters [Puppeter Configuration Setup](https://github.com
 To run tests execute the following command:
 
 ```bash
-invoke run-test`
+invoke run-test
 ```
 
 This command has the following flags:
