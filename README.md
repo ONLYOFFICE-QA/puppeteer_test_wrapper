@@ -9,7 +9,7 @@ uploading necessary files, and handling reports.
 
 ## Requirements
 
-* Python v3.10 and above
+* Python v3.11 and above
 * Poetry v1.8.2 and above
 * DigitalOcean API key
 
