@@ -1,0 +1,9 @@
+{
+  "DROPLET_NAME": "puppeteer-test",
+  "DROPLET_REGION": "nyc3",
+  "DROPLET_IMAGE": "ubuntu-24-04-x64",
+  "DROPLET_SIZE": "s-1vcpu-1gb",
+  "DEFAULT_USER": "root",
+  "SSH_DO_USER_NAME": "",
+  "DO_PROJECT_NAME": ""
+}

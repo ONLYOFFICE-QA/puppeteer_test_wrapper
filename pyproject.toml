@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "puppeteer-wrapper"
+version = "0.1.0"
+description = ""
+authors = ["l02 <l8556@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+rich = "^13.7.1"
+invoke = "^2.2.0"
+python-digitalocean = "^1.17.0"
+host-tools = { git = "https://github.com/l8556/host_tools.git", branch = "master" }
+ssh-wrapper = { git = "https://github.com/l8556/SshWrapper.git", branch = "master" }
+pydantic = "^2"
+beautifulsoup4 = "^4.12.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

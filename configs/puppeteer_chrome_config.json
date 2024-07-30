@@ -1,0 +1,20 @@
+{
+    "testOptions": {
+        "url": "https://kim.teamlab.info/example",
+        "urlParam": "action={\"debug\":true}",
+        "debugMode": true,
+        "messageType": ["error", "log"],
+        "cacheEnabled": true
+    },
+    "puppeteerOptions": {
+        "browser": "chrome",
+        "headless": false,
+        "puppeteerDelay": 0,
+        "userDelay": 0,
+        "executablePath": "/usr/bin/google-chrome-stable"
+    },
+    "reportOptions": {
+        "ignoreBrowserErrors": [],
+        "ignoreExternalScriptsErrors": ["Checking file for encryption is not supported on Windows"]
+    }
+}
