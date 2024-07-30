@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, List
+from typing import Optional
 
 import digitalocean
 
