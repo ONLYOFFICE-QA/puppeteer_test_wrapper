@@ -6,6 +6,9 @@ from data.decorators import singleton
 
 @singleton
 class FilePaths:
+    """
+    A singleton class that defines various file paths used in the Puppeteer test environment.
+    """
     remote_home_dir = '/root'
     puppeter_run_sh_name = 'puppeteer_run.sh'
     puppeter_config_file_name = 'puppeteer_config.json'

@@ -115,7 +115,6 @@ class Droplet:
             print(f"[red]|ERROR| Droplet retrieval error: {e}")
             return None
 
-
     def get_project_name_by_droplet(self, droplet: "digitalocean.Droplet | str | int") -> Optional[str]:
         droplet_id = self.info(self._get_droplet(droplet), load=False).get_id()
         for project in self.__project.get_all():
