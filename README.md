@@ -7,6 +7,14 @@ in a remote environment. It utilizes DigitalOcean droplets for running the tests
 and includes features for managing droplets,
 uploading necessary files, and handling reports.
 
+## Table of Contents
+
+-   [**Requirements**](#requirements)
+-   [**Installation**](#installation)
+-   [**Configuration Setup**](#configuration-setup)
+-   [**Running Tests**](#running-tests)
+
+
 ## Requirements
 
 * Python v3.11 and above
@@ -15,14 +23,11 @@ uploading necessary files, and handling reports.
 
 ## Installation
 
-Place your DigitalOcean API key in a file at the path
+* Place your DigitalOcean API key in a file at the path
 `~/.do/access_token`
-
-### Installing the package manager poetry
-
-* Instruction: [Python Poetry Installation Guide](https://python-poetry.org/docs/#installation)
-
-To install the dependencies via poetry, run the command
+*  Installing the package manager poetry.
+Instruction: [Python Poetry Installation Guide](https://python-poetry.org/docs/#installation)
+* Install python dependencies via poetry, run the command:
 `poetry install`
 
 To activate the virtual environment, run the command
