@@ -97,7 +97,7 @@ class SshExecuter:
         start_time = time.time()
 
         with console.status(msg) as status:
-            while not self.check_service_status():
+            while self.check_service_status():
                 status.update(f"{msg}\n{self._get_demon_log(line_num=update_log_num)}")
 
                 time.sleep(interval)
