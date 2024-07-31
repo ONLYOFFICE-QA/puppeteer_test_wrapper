@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-
+from typing import Optional
 from ssh_wrapper import Ssh, SshException
 from ssh_wrapper.data import CommandOutput
 from rich.console import Console
@@ -32,6 +32,21 @@ class SshExecuter:
         for cmd in self.linux_service.start_demon_commands():
             self.exec_cmd(cmd)
 
+    def get_service_exit_code(self) -> Optional[int]:
+        """
+        Retrieves the exit code of the service's main process.
+
+        :return: The exit code of the service's main process if available; None otherwise.
+        """
+        cmd = f"systemctl show -p ExecMainCode {self.linux_service.name}"
+        output = self.exec_cmd(cmd, stdout=False).stdout
+
+        if '=' in output:
+            _, exit_code = output.split('=', 1)
+            return int(exit_code.strip())
+
+        return None
+
     def change_service_dir_access(self):
         """
         Change the access permissions of the Linux service directory.
@@ -39,8 +54,15 @@ class SshExecuter:
         for cmd in self.linux_service.change_service_dir_access_cmd():
             self.exec_cmd(cmd,)
 
-    def wait_ssh_up(self):
-        ...
+    def check_service_status(self, status: str = 'active') -> bool:
+        """
+        Checks if the service is in the specified status.('active', 'inactive')
+
+        :param status: The status to check for, default is 'active'.
+        :return: True if the service is in the specified status, False otherwise.
+        """
+        cmd = f'systemctl is-active {self.linux_service.name}'
+        return self.exec_cmd(cmd, stdout=False).stdout.lower() == status
 
     def wait_execute_service(self, timeout: int = None, interval: int | float = 0.5):
         """
@@ -58,7 +80,7 @@ class SshExecuter:
         start_time = time.time()
 
         with console.status(msg) as status:
-            while self.exec_cmd(f'systemctl is-active {demon_name}', stdout=False).stdout.lower() == 'active':
+            while not self.check_service_status(status='inactive'):
                 status.update(f"{msg}\n{self._get_demon_log()}")
 
                 time.sleep(interval)
