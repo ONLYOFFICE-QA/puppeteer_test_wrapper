@@ -60,7 +60,7 @@ Example: `"root"`
 configured on DigitalOcean.
 If no name is specified, all existing keys on DigitalOcean will be added to the droplet.
 
-`DO_PROJECT_NAME` - (Optional)The name of the project in
+`DO_PROJECT_NAME` - (Optional) The name of the project in
 DigitalOcean where the droplet will be moved to.
 
 ### puppeteer_chrome_config.json - Configuration file required to run puppeteer tests

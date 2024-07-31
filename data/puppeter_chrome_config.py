@@ -9,6 +9,9 @@ from .decorators import singleton
 
 
 class TestOptionsModel(BaseModel):
+    """
+    A Pydantic model for validating the configuration parameters.
+    """
     url: str
     urlParam: str
     debugMode: bool
@@ -17,6 +20,9 @@ class TestOptionsModel(BaseModel):
 
 
 class PuppeteerOptionsModel(BaseModel):
+    """
+    A Pydantic model for validating the configuration parameters.
+    """
     browser: str
     headless: bool
     puppeteerDelay: int
@@ -25,11 +31,17 @@ class PuppeteerOptionsModel(BaseModel):
 
 
 class ReportOptionsModel(BaseModel):
+    """
+    A Pydantic model for validating the configuration parameters.
+    """
     ignoreBrowserErrors: List[str]
     ignoreExternalScriptsErrors: List[str] = Field(default_factory=list)
 
 
 class FullConfigModel(BaseModel):
+    """
+    A Pydantic model for validating the configuration parameters.
+    """
     testOptions: TestOptionsModel
     puppeteerOptions: PuppeteerOptionsModel
     reportOptions: ReportOptionsModel
