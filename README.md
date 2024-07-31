@@ -9,25 +9,24 @@ uploading necessary files, and handling reports.
 
 ## Table of Contents
 
--   [**Requirements**](#requirements)
--   [**Installation**](#installation)
--   [**Configuration Setup**](#configuration-setup)
--   [**Running Tests**](#running-tests)
-
+- [**Requirements**](#requirements)
+- [**Installation**](#installation)
+- [**Configuration Setup**](#configuration-setup)
+- [**Running Tests**](#running-tests)
 
 ## Requirements
 
-* Python v3.11 and above
-* Poetry v1.8.2 and above
-* DigitalOcean API key
+- Python v3.11 and above
+- Poetry v1.8.2 and above 
+- DigitalOcean API key
 
 ## Installation
 
-* Place your DigitalOcean API key in a file at the path
+- Place your DigitalOcean API key in a file at the path
 `~/.do/access_token`
-*  Installing the package manager poetry.
+- Installing the package manager poetry.
 Instruction: [Python Poetry Installation Guide](https://python-poetry.org/docs/#installation)
-* Install python dependencies via poetry, run the command:
+- Install python dependencies via poetry, run the command:
 `poetry install`
 
 To activate the virtual environment, run the command
