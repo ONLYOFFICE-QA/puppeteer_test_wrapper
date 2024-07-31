@@ -102,7 +102,7 @@ class TestTools:
             if not ssh_executer.check_service_status():
                 ssh_executer.start_script_service()
 
-            ssh_executer.wait_execute_service(interval=1)
+            ssh_executer.wait_execute_service(interval=2)
             self.report.download(sftp)
 
     def handle_report(self):

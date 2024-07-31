@@ -64,12 +64,13 @@ class SshExecuter:
         cmd = f'systemctl is-active {self.linux_service.name}'
         return self.exec_cmd(cmd, stdout=False).stdout.lower() == status
 
-    def wait_execute_service(self, timeout: int = None, interval: int | float = 0.5):
+    def wait_execute_service(self, timeout: int = None, interval: int | float = 0.5, update_log_num: int = 20):
         """
         Wait for the Linux service to execute, periodically checking its status and outputting logs.
 
         :param timeout: Maximum time to wait for the service to execute. If None, wait indefinitely.
         :param interval: Interval in seconds between status checks. Defaults to 0.5 seconds.
+        :param update_log_num: Number of log lines to retrieve. Defaults to 20.
         :raises SshException: If the waiting time exceeds the specified timeout.
         """
         line = '-' * 90
@@ -81,7 +82,7 @@ class SshExecuter:
 
         with console.status(msg) as status:
             while not self.check_service_status(status='inactive'):
-                status.update(f"{msg}\n{self._get_demon_log()}")
+                status.update(f"{msg}\n{self._get_demon_log(line_num=update_log_num)}")
 
                 time.sleep(interval)
 
