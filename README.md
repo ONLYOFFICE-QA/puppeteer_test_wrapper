@@ -60,9 +60,8 @@ Example: `"s-1vcpu-1gb"` (1 vCPU, 1 GB RAM)
 used for accessing the droplet.
 Example: `"root"`
 
-`SSH_DO_USER_NAME` - (Optional) The name of the SSH key user
+`SSH_DO_USER_NAME` - (Required) The name of the SSH key user
 configured on DigitalOcean.
-If no name is specified, all existing keys on DigitalOcean will be added to the droplet.
 
 `DO_PROJECT_NAME` - (Optional) The name of the project in
 DigitalOcean where the droplet will be moved to.
