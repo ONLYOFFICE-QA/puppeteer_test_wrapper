@@ -8,7 +8,7 @@ from rich import print
 from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
 
-from libs import DigitalOceanWrapper
+from digitalocean_wrapper import DigitalOceanWrapper
 from data import DropletConfig, PuppeteerFireFoxConfig, PuppeteerChromeConfig
 from .document_server import DocumentServer
 from .Uploader import Uploader

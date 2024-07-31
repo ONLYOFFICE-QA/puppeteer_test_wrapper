@@ -432,6 +432,25 @@ test = ["certifi", "pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-co
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "digitalocean-wrapper"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.10,<4.0"
+files = []
+develop = false
+
+[package.dependencies]
+python-digitalocean = "^1.17.0"
+rich = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/l8556/digitalocean_wrapper.git"
+reference = "master"
+resolved_reference = "465dc9881fb4c48767e811eadf51fd8863488ee9"
+
+[[package]]
 name = "distro"
 version = "1.9.0"
 description = "Distro - an OS platform information API"
@@ -1329,4 +1348,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8f17b92d19be52b5638a3d1e7d87e4ccd6f26401f1230483432253925cfd8a29"
+content-hash = "a7ce101b610f9d4b4fe83396fd4831783d199836254e6ef29aafa00e65775bec"
