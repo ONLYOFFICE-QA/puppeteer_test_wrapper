@@ -49,9 +49,9 @@ class SshExecuter:
 
     def get_service_exit_status(self) -> Optional[int]:
         """
-        Retrieves the exit status code of the service's.
+        Retrieves the exit status code of the service's main process.
 
-        :return: The exit code of the service's main process if available; None otherwise.
+        :return: The exit status code of the service's main process if available; None otherwise.
         """
         cmd = f"systemctl show -p ExecMainStatus {self.linux_service.name}"
         output = self.exec_cmd(cmd, stdout=False).stdout
@@ -61,7 +61,6 @@ class SshExecuter:
             return int(exit_code.strip())
 
         return None
-
 
     def change_service_dir_access(self):
         """
