@@ -41,10 +41,6 @@ class PuppeteerRunScript:
         Generate the content of the bash script for setting up and running the Puppeteer test.
         :return: The generated bash script content as a string.
         """
-        browser_installation = (
-            "sudo apt-get install firefox -y" if self.config.browser.lower() == 'firefox'
-            else ""
-        )
         puppeteer_run_cmd = f"python3 run.py '{self.path.remote_puppeter_config_file}'{self._get_flags()}"
         print(f"[green]|INFO| Puppeteer run cmd: [cyan]{puppeteer_run_cmd}[/]")
 
@@ -58,12 +54,7 @@ sudo apt-get install -y curl git zip unzip
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# GoogleChrome installation
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt-get install ./google-chrome-stable_current_amd64.deb -y
-
-# FireFox installation (if needed)
-{browser_installation}
+{self._browser_installation()}
 
 # Cloning puppeteer repositories
 cd '{self.home_dir}'
@@ -93,6 +84,24 @@ zip -r '{self.path.remote_result_archive}' {basename(self.path.remote_report_dir
         with open(self.script_path, mode='w', newline='') as file:
             file.write('\n'.join(line.strip() for line in self.generate.split('\n')))
         return self.script_path
+
+    def _browser_installation(self):
+        """
+        Determines the browser installation commands based on the configuration.
+
+        :return: A string representing the browser installation commands.
+        """
+        if self.config.browser.lower() == 'firefox':
+            return """\
+            # FireFox installation
+            sudo apt-get install firefox -y\
+            """
+        else:
+            return """\
+            # GoogleChrome installation
+            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt-get install ./google-chrome-stable_current_amd64.deb -y\
+            """
 
     def _get_flags(self):
         """

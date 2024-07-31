@@ -97,10 +97,12 @@ class TestTools:
             ssh_executer = SshExecuter(ssh, linux_service=self.linux_service)
             uploader = Uploader(sftp, self.puppeteer_config, self.linux_service, self.puppeteer_run_script, self.tmp_dir)
 
-            ssh_executer.change_service_dir_access()
             uploader.upload_test_files()
-            ssh_executer.start_script_service()
-            ssh_executer.wait_execute_service(interval=1)
+
+            if not ssh_executer.check_service_status():
+                ssh_executer.start_script_service()
+
+            ssh_executer.wait_execute_service(interval=2)
             self.report.download(sftp)
 
     def handle_report(self):
