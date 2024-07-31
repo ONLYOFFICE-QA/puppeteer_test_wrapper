@@ -129,5 +129,9 @@ class TestTools:
         """
         if self.droplet_config.ssh_do_user_name:
             ssh_key_id = self.do.get_ssh_key_id_by_name(self.droplet_config.ssh_do_user_name)
-            return [ssh_key_id] if ssh_key_id else self.do.get_all_ssh_keys_id()
-        return self.do.get_all_ssh_keys_id()
+            if ssh_key_id:
+                return [ssh_key_id]
+
+            raise ValueError(f"|ERROR| Ssh key not found by name {self.droplet_config.ssh_do_user_name}")
+
+        raise ValueError(f"|ERROR| You need to specify the name of the SSH key configured on DigitalOcean")
