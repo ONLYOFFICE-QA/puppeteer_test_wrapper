@@ -20,6 +20,8 @@ from .report import Report
 from .ssh_executer import SshExecuter
 
 
+class TestException(Exception): ...
+
 class TestTools:
     """
     A class to manage testing tools and operations for setting up and running Puppeteer scripts on a DigitalOcean droplet.
@@ -46,6 +48,7 @@ class TestTools:
         self.ds_version = self.ds.get_version()
         self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser, tmp_dir=self.tmp_dir)
         self.droplet = None
+        self.retry = 2
 
     def create_test_droplet(self):
         """
@@ -103,6 +106,13 @@ class TestTools:
                 ssh_executer.start_script_service()
 
             ssh_executer.wait_execute_service(interval=2)
+
+            if ssh_executer.get_service_exit_code() == 1:
+                self.run_script_on_droplet()
+                self.retry -= 1
+                if self.retry == 0:
+                    raise TestException('|ERROR| Puppeter test failed with exit code ')
+
             self.report.download(sftp)
 
     def handle_report(self):
