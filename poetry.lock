@@ -447,8 +447,8 @@ rich = "*"
 [package.source]
 type = "git"
 url = "https://github.com/l8556/digitalocean_wrapper.git"
-reference = "feature/add-ssh-key-methods"
-resolved_reference = "af12caa89ff2463a56a2a668e969a5580a4902d8"
+reference = "master"
+resolved_reference = "0667e921f63aff605697e736f0a7f4402913d9fc"
 
 [[package]]
 name = "distro"
@@ -1348,4 +1348,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a03df947ea294442341205923c6dbefe1c48383af0fcfd57c4a67e8204d1d45b"
+content-hash = "a7ce101b610f9d4b4fe83396fd4831783d199836254e6ef29aafa00e65775bec"
