@@ -47,6 +47,21 @@ class SshExecuter:
 
         return None
 
+    def get_service_exit_status(self) -> Optional[int]:
+        """
+        Retrieves the exit status code of the service's main process.
+
+        :return: The exit status code of the service's main process if available; None otherwise.
+        """
+        cmd = f"systemctl show -p ExecMainStatus {self.linux_service.name}"
+        output = self.exec_cmd(cmd, stdout=False).stdout
+
+        if '=' in output:
+            _, exit_code = output.split('=', 1)
+            return int(exit_code.strip())
+
+        return None
+
     def change_service_dir_access(self):
         """
         Change the access permissions of the Linux service directory.
@@ -81,7 +96,7 @@ class SshExecuter:
         start_time = time.time()
 
         with console.status(msg) as status:
-            while not self.check_service_status(status='inactive'):
+            while self.check_service_status():
                 status.update(f"{msg}\n{self._get_demon_log(line_num=update_log_num)}")
 
                 time.sleep(interval)
