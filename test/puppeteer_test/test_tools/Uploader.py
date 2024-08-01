@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from rich import print
-
-from host_tools import File, Shell
+from host_tools import File
 from ssh_wrapper import Sftp
 from posixpath import join
 from typing import Union
