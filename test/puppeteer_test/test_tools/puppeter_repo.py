@@ -19,12 +19,12 @@ class PuppeterRepo:
         """
         Clone the Dep.Tests repository
         """
-        print(f"[green]|INFO| Downloading [cyan]Dep.Tests[/] repo to {self.path.local_dep_test}")
+        print(f"[green]|INFO| Cloning [cyan]Dep.Tests[/] repository to {self.path.local_dep_test}")
         Shell.call(f"git clone {self.dep_test_repo} {self.path.local_dep_test} --depth 1")
 
     def clone_test_files(self):
         """
         Clone the pp-files repository
         """
-        print(f"[green]|INFO| Downloading [cyan]Puppeter Test Files[/] repo to {self.path.local_puppeteer_files_dir}")
+        print(f"[green]|INFO| Cloning [cyan]Puppeter Files[/] repository to {self.path.local_puppeteer_files_dir}")
         Shell.call(f"git clone {self.puppeter_files_repo} {self.path.local_puppeteer_files_dir}")
