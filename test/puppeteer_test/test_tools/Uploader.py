@@ -96,4 +96,5 @@ class Uploader:
         else:
             print(f"[green]|INFO| Update {basename(self.dep_test_path)} repo")
             Shell.call(f"cd {self.dep_test_path} && git pull")
-            Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")
+            # Todo
+            # Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")
