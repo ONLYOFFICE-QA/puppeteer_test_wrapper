@@ -11,7 +11,7 @@ class PuppeterRepo:
     def __init__(self):
         self.path = Paths()
 
-    def clone(self):
+    def clone(self) -> None:
         self.clone_dep_test()
         self.clone_test_files()
 
