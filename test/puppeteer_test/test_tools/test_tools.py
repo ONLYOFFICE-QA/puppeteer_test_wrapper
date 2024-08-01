@@ -145,7 +145,7 @@ class TestTools:
         :return: A list of SSH key IDs.
         """
         if self.droplet_config.ssh_do_user_name:
-            ssh_key_id = self.do.get_ssh_key_id_by_name(self.droplet_config.ssh_do_user_name)
+            ssh_key_id = self.do.ssh_key.get_id_by_name(self.droplet_config.ssh_do_user_name)
             if ssh_key_id:
                 return [ssh_key_id]
 
