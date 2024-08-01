@@ -36,7 +36,6 @@ class TestTools:
         :param flags: A list of flags to pass to the Puppeteer script. Defaults to None.
         """
         self.path = Paths()
-        self.tmp_dir = self._get_tmp_dir()
         self.puppeteer_config = puppeteer_config
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
         self.do = DigitalOceanWrapper()
@@ -47,6 +46,8 @@ class TestTools:
         self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser)
         self.droplet = None
         self.retry_num = 2
+        self._create_tmp_dir()
+
 
     def create_test_droplet(self):
         """
@@ -96,7 +97,7 @@ class TestTools:
         _server = ServerData(self.get_droplet_ip(), self.droplet_config.default_user)
         with Ssh(_server) as ssh, Sftp(_server, ssh.connection) as sftp:
             ssh_executer = SshExecuter(ssh, linux_service=self.linux_service)
-            uploader = Uploader(sftp, self.puppeteer_config, self.linux_service, self.puppeteer_run_script, self.tmp_dir)
+            uploader = Uploader(sftp, self.puppeteer_config, self.linux_service, self.puppeteer_run_script)
 
             uploader.upload_test_files()
 
@@ -116,14 +117,13 @@ class TestTools:
         """
         self.report.convert_paths_to_relative()
 
-    def _get_tmp_dir(self):
+    def _create_tmp_dir(self) -> None:
         """
         Create and return a temporary directory for storing script and other files.
         :return: The path to the temporary directory.
         """
         os.makedirs(self.path.tmp_dir, exist_ok=True)
         Dir.delete(self.path.tmp_dir, clear_dir=True)
-        return self.path.tmp_dir
 
     def _check_service_exit_code(self, exit_code: int) -> bool:
         if exit_code == 1:

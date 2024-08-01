@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-from os.path import basename
 from rich import print
 
 from host_tools import File, Shell
@@ -12,7 +10,6 @@ from typing import Union
 from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
 from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
-from tempfile import gettempdir
 
 from .puppeteer_run_script import PuppeteerRunScript
 
@@ -28,8 +25,7 @@ class Uploader:
             sftp: Sftp,
             puppeteer_config: Union[PuppeteerFireFoxConfig, PuppeteerChromeConfig],
             linux_service: LinuxScriptDemon,
-            puppeteer_run_script: PuppeteerRunScript,
-            tmp_dir: str = None
+            puppeteer_run_script: PuppeteerRunScript
     ):
         """
         Initialize the Uploader with necessary configurations and paths.
@@ -44,7 +40,6 @@ class Uploader:
         self.sftp = sftp
         self.linux_service = linux_service
         self.puppeteer_run_script = puppeteer_run_script
-        self.tmp_dir = tmp_dir or gettempdir()
         self.remote_service_path = join(self.linux_service.services_dir, self.linux_service.name)
         self.puppeteer_config = puppeteer_config
 
@@ -70,7 +65,7 @@ class Uploader:
         Create the systemd service file for running the Puppeteer script.
         :return: The path to the created service file.
         """
-        return self.linux_service.create(save_path=join(self.tmp_dir, self.linux_service.name))
+        return self.linux_service.create(save_path=join(self.path.tmp_dir, self.linux_service.name))
 
     def _upload_puppeteer(self, sftp: Sftp) -> None:
         """
