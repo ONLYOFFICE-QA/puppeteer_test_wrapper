@@ -91,7 +91,9 @@ class Uploader:
         """
         if not os.path.isdir(self.dep_test_path):
             print(f"[green]|INFO| Downloading [cyan]Dep.Tests[/] repo to {self.dep_test_path}")
-            Shell.call(f"git clone {self.dep_test_repo} {self.dep_test_path}")
+            Shell.call(f"git clone {self.dep_test_repo} {self.dep_test_path} --depth 1")
+            Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")
         else:
             print(f"[green]|INFO| Update {basename(self.dep_test_path)} repo")
             Shell.call(f"cd {self.dep_test_path} && git pull")
+            Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")

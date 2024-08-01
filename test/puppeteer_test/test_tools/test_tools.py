@@ -133,11 +133,12 @@ class TestTools:
         if exit_code == 1:
             print(
                 f"[red]|WARNING| Script ended with a failure of the exit code {exit_code}."
-                f"Retrying: {self.retry_num - 1}/{self.retry_num}."
+                f"Retrying num: {self.retry_num}."
             )
-            self.retry_num -= 1
             if self.retry_num == 0:
                 raise TestException(f"|ERROR| Puppeteer's test ended with a failure of the exit code {exit_code}")
+
+            self.retry_num -= 1
             return False
 
         return True
