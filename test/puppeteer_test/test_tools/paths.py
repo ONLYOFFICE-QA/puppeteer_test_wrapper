@@ -18,6 +18,7 @@ class Paths:
 
     local_dep_test = join(tmp_dir, 'Dep.Tests')
     local_puppeteer_dir = join(local_dep_test, 'puppeteer')
+    local_puppeteer_files_dir = join(local_dep_test, 'puppeteer', 'files')
 
     local_report_dir: str = join(getcwd(), 'Reports')
     local_puppeter_config_file: str = join(getcwd(), puppeter_config_file_name)

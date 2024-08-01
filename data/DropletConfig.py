@@ -2,6 +2,7 @@
 import json
 from os import getcwd
 from os.path import join
+import re
 
 from pydantic import BaseModel
 from .decorators import singleton
@@ -44,8 +45,9 @@ class DropletConfig:
         do_project_name (str): The name of the project in DigitalOcean under which the droplet will be organized.
     """
     def __init__(self, config_path: str = join(getcwd(), 'configs', 'droplet_config.json')):
+        self.droplet_name_pattern = "droplets-starter-"
         self._config = self._load_config(config_path)
-        self.name = f"droplets-starter-{self._config.DROPLET_NAME.strip()}"
+        self.name = self._get_droplet_name()
         self.region = self._config.DROPLET_REGION
         self.image = self._config.DROPLET_IMAGE
         self.size = self._config.DROPLET_SIZE
@@ -53,6 +55,10 @@ class DropletConfig:
         self.ssh_do_user_name = self._config.SSH_DO_USER_NAME
         self.do_project_name = self._config.DO_PROJECT_NAME
         self._verify_droplet_name_pattern()
+
+    def _get_droplet_name(self) -> str:
+        droplet_name = re.sub(r'[^a-zA-Z0-9.-]', '-', self._config.DROPLET_NAME.strip())
+        return f"{self.droplet_name_pattern}{droplet_name}"
 
     @staticmethod
     def _load_config(file_path: str) -> ConfigModel:
