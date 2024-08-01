@@ -43,6 +43,7 @@ class DropletConfig:
         default_user (str): The default user account for the droplet.
         ssh_do_user_name (str): The name of the SSH key user configured on DigitalOcean.
         do_project_name (str): The name of the project in DigitalOcean under which the droplet will be organized.
+        droplet_name_pattern (str): The pattern that the droplet name must follow.
     """
     def __init__(self, config_path: str = join(getcwd(), 'configs', 'droplet_config.json')):
         self.droplet_name_pattern = "droplets-starter-"
@@ -57,6 +58,11 @@ class DropletConfig:
         self._verify_droplet_name_pattern()
 
     def _get_droplet_name(self) -> str:
+        """
+        Generates and returns the full name for the droplet.
+
+        :return: The full name of the droplet.
+        """
         droplet_name = re.sub(r'[^a-zA-Z0-9.-]', '-', self._config.DROPLET_NAME.strip())
         return f"{self.droplet_name_pattern}{droplet_name}"
 
