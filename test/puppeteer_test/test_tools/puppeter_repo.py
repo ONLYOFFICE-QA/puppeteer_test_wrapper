@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from host_tools import Shell
+from rich import print
 
 from .paths import Paths
 
