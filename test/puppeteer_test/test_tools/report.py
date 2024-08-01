@@ -7,17 +7,17 @@ from tempfile import gettempdir
 
 from ssh_wrapper import Sftp
 
-from .file_paths import FilePaths
+from .paths import Paths
 from bs4 import BeautifulSoup
 
 
 class Report:
 
-    def __init__(self, version: str, browser: str, tmp_dir: str = None):
-        self.__paths = FilePaths()
+    def __init__(self, version: str, browser: str):
+        self.__paths = Paths()
         self.dir = join(self.__paths.local_report_dir, version, browser.lower())
         self.path = join(self.dir, 'out', 'report.html')
-        self.tmp_dir = tmp_dir or gettempdir()
+        self.tmp_dir = self.__paths.tmp_dir
         self.archive_path = join(self.tmp_dir, basename(self.__paths.remote_result_archive))
         Dir.create(self.dir, stdout=False)
 

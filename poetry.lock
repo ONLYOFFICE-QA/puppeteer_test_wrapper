@@ -448,7 +448,7 @@ rich = "*"
 type = "git"
 url = "https://github.com/l8556/digitalocean_wrapper.git"
 reference = "master"
-resolved_reference = "465dc9881fb4c48767e811eadf51fd8863488ee9"
+resolved_reference = "0667e921f63aff605697e736f0a7f4402913d9fc"
 
 [[package]]
 name = "distro"

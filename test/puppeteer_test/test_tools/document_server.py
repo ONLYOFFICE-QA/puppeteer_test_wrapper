@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from .file_paths import FilePaths
+from .paths import Paths
 
 
 class DocumentServer:
@@ -20,7 +20,7 @@ class DocumentServer:
         Initialize the DocumentServer with a base URL.
         :param url: The base URL of the document server.
         """
-        self.path = FilePaths()
+        self.path = Paths()
         self.url = self._get_url(url)
 
     def get_version(self) -> Optional[str]:
