@@ -10,7 +10,7 @@ from typing import Union
 
 
 from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
-from .file_paths import FilePaths
+from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
 from tempfile import gettempdir
 
@@ -21,9 +21,7 @@ class Uploader:
     """
     A class to manage the uploading of necessary files for running Puppeteer tests on a remote server.
     """
-    dep_test_path = os.path.join(os.getcwd(), 'Dep.Tests')
     dep_test_repo = 'git@github.com:ONLYOFFICE/Dep.Tests.git'
-    puppeteer_path = join(dep_test_path, 'puppeteer')
 
     def __init__(
             self,
@@ -42,7 +40,7 @@ class Uploader:
         :param puppeteer_run_script: An instance of PuppeteerRunScript for managing the Puppeteer script.
         :param tmp_dir: Temporary directory for storing files before upload. Defaults to system temp directory.
         """
-        self.paths = FilePaths()
+        self.path = Paths()
         self.sftp = sftp
         self.linux_service = linux_service
         self.puppeteer_run_script = puppeteer_run_script
@@ -55,8 +53,8 @@ class Uploader:
         Upload all necessary files for running Puppeteer tests to the remote server.
         """
         self._upload_puppeteer(self.sftp)
-        self._upload(self.puppeteer_config.config_path, self.paths.remote_puppeter_config_file)
-        self._upload(self.puppeteer_run_script.create(), self.paths.remote_puppeter_run_sh)
+        self._upload(self.puppeteer_config.config_path, self.path.remote_puppeter_config_file)
+        self._upload(self.puppeteer_run_script.create(), self.path.remote_puppeter_run_sh)
         self._upload(self._create_run_script_service(), self.remote_service_path)
 
     def _upload(self, local_path: str, remote_path: str) -> None:
@@ -80,21 +78,14 @@ class Uploader:
         :param sftp: An instance of Sftp for handling file transfers.
         """
         self._get_puppeteer()
-        puppeteer_archive = join(self.tmp_dir, basename(self.paths.remote_puppeteer_archive))
 
-        File.compress(self.puppeteer_path, puppeteer_archive, stdout=True)
-        sftp.upload_file(puppeteer_archive, self.paths.remote_puppeteer_archive)
+        File.compress(self.path.local_puppeteer_dir, self.path.local_puppeteer_archive, stdout=True)
+        sftp.upload_file(self.path.local_puppeteer_archive, self.path.remote_puppeteer_archive)
 
     def _get_puppeteer(self) -> None:
         """
         Clone or update the Dep.Tests repository to ensure the Puppeteer directory is up to date.
         """
-        if not os.path.isdir(self.dep_test_path):
-            print(f"[green]|INFO| Downloading [cyan]Dep.Tests[/] repo to {self.dep_test_path}")
-            Shell.call(f"git clone {self.dep_test_repo} {self.dep_test_path} --depth 1")
-            Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")
-        else:
-            print(f"[green]|INFO| Update {basename(self.dep_test_path)} repo")
-            Shell.call(f"cd {self.dep_test_path} && git pull")
-            # Todo
-            # Shell.call(f"cd {self.dep_test_path} && git submodule update --init puppeteer/files")
+        print(f"[green]|INFO| Downloading [cyan]Dep.Tests[/] repo to {self.path.local_dep_test}")
+        Shell.call(f"git clone {self.dep_test_repo} {self.path.local_dep_test} --depth 1")
+        Shell.call(f"cd {self.path.local_dep_test} && git submodule update --init puppeteer/files")

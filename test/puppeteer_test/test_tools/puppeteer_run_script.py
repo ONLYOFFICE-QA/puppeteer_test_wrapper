@@ -6,7 +6,7 @@ from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
 from posixpath import join, basename, dirname
 from tempfile import gettempdir
 
-from .file_paths import FilePaths
+from .paths import Paths
 
 class PuppeteerRunScript:
     """
@@ -28,11 +28,11 @@ class PuppeteerRunScript:
         :param script_name: The name of the script file. Defaults to a predefined name.
         :param flags: A dictionary of flags to pass to the Puppeteer script. Defaults to None.
         """
-        self.path = FilePaths()
+        self.path = Paths()
         self.file_name = script_name or self.path.puppeter_run_sh_name
         self.home_dir = self.path.remote_home_dir
         self.flags = flags
-        self.script_path = join(script_dir or gettempdir(), self.file_name)
+        self.script_path = join(script_dir or self.path.tmp_dir, self.file_name)
         self.config = config
 
     @property

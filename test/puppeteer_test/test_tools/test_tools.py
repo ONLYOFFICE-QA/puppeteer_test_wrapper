@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-from posixpath import join
-
 from host_tools.utils import Dir
 from rich import print
 from ssh_wrapper import Ssh, Sftp, ServerData
@@ -13,7 +11,7 @@ from data import DropletConfig, PuppeteerFireFoxConfig, PuppeteerChromeConfig
 from .document_server import DocumentServer
 from .Uploader import Uploader
 from .decorators import droplet_exists
-from .file_paths import FilePaths
+from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
 from .puppeteer_run_script import PuppeteerRunScript
 from .report import Report
@@ -37,16 +35,16 @@ class TestTools:
         :param puppeteer_config: Configuration for Puppeteer, specifying the browser and other settings.
         :param flags: A list of flags to pass to the Puppeteer script. Defaults to None.
         """
+        self.path = Paths()
         self.tmp_dir = self._get_tmp_dir()
         self.puppeteer_config = puppeteer_config
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
         self.do = DigitalOceanWrapper()
         self.droplet_config = DropletConfig()
-        self.path = FilePaths()
         self.linux_service = LinuxScriptDemon(self.path.remote_puppeter_run_sh, user=self.droplet_config.default_user)
-        self.puppeteer_run_script = PuppeteerRunScript(self.puppeteer_config, script_dir=self.tmp_dir, flags=flags)
+        self.puppeteer_run_script = PuppeteerRunScript(self.puppeteer_config, flags=flags)
         self.ds_version = self.ds.get_version()
-        self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser, tmp_dir=self.tmp_dir)
+        self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser)
         self.droplet = None
         self.retry_num = 2
 
@@ -118,16 +116,14 @@ class TestTools:
         """
         self.report.convert_paths_to_relative()
 
-    @staticmethod
-    def _get_tmp_dir():
+    def _get_tmp_dir(self):
         """
         Create and return a temporary directory for storing script and other files.
         :return: The path to the temporary directory.
         """
-        tmp_dir = join(os.getcwd(), 'tmp')
-        os.makedirs(tmp_dir, exist_ok=True)
-        Dir.delete(tmp_dir, clear_dir=True)
-        return tmp_dir
+        os.makedirs(self.path.tmp_dir, exist_ok=True)
+        Dir.delete(self.path.tmp_dir, clear_dir=True)
+        return self.path.tmp_dir
 
     def _check_service_exit_code(self, exit_code: int) -> bool:
         if exit_code == 1:
