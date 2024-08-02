@@ -71,15 +71,33 @@ class DigitalOceanSshKey:
 
         :return: The SSH key ID if created; None otherwise.
         """
-        ssh_key_name = Prompt.ask(
-            f"[red]Enter the name of the ssh key at path [cyan]{self.local_ssh_key_path}[/] to add to DigitalOcean"
-        )
+        ssh_key_name = self._get_ssh_key_name()
 
         if Prompt.ask(self._generate_creation_msg(ssh_key_name), choices=["Y", "N"], default='y').lower() == 'y':
             ssh_key = self.do.ssh_key.create(key_name=ssh_key_name, public_key=self.local_pub_key)
             return ssh_key.id if ssh_key else None
 
         return None
+
+    def _get_ssh_key_name(self) -> str:
+        """
+        Prompt the user to enter a name for the SSH key to be added to DigitalOcean.
+
+        The method ensures that the name entered by the user does not conflict with existing SSH key names
+        on DigitalOcean. It repeatedly prompts the user until a unique name is provided.
+
+        :return: A unique SSH key name that does not already exist on DigitalOcean.
+        """
+        existing_keys = set(self.do.ssh_key.get_all_ssh_key_names())
+
+        while True:
+            ssh_key_name = Prompt.ask(
+                f"[red]Enter the name of the ssh key at path [cyan]{self.local_ssh_key_path}[/] to add to DigitalOcean"
+            )
+            if ssh_key_name in existing_keys:
+                print(f"[bold red]|ERROR| A key named {ssh_key_name} already exists. Enter another name.")
+            else:
+                return ssh_key_name
 
     def _generate_creation_msg(self, ssh_key_name: str) -> str:
         """
