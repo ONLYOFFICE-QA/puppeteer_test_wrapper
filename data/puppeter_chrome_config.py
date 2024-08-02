@@ -2,7 +2,6 @@
 import json
 from os import getcwd
 from os.path import join
-from rich import print
 
 from pydantic import BaseModel, Field
 from urllib.parse import urlparse
