@@ -1,7 +1,9 @@
 from invoke import task
 from rich.prompt import Prompt
 from rich import print
+from digitalocean_wrapper import DigitalOceanWrapper
 
+from data import DropletConfig
 from test import PuppeteerTest
 
 
@@ -32,16 +34,18 @@ def create_droplet(c):
 
 @task
 def delete_droplet(c):
-    test = PuppeteerTest().test
-    test.droplet = test.do.droplet.get_by_name(test.droplet_config.name)
+    do = DigitalOceanWrapper()
+    droplet_config = DropletConfig()
 
-    if not test.droplet:
-        return print(f"[red]|INFO| The Droplet [cyan]{test.droplet_config.name}[/] was not found")
+    droplet = do.droplet.get_by_name(droplet_config.name)
+
+    if not droplet:
+        return print(f"[red]|INFO| The Droplet [cyan]{droplet_config.name}[/] was not found")
 
     msg = (
         f"[red]|WARNING| Will be deleted droplet: "
-        f"[cyan]{test.droplet.name}[/] ip: [cyan]{test.droplet.ip_address}[/] want to continue?"
+        f"[cyan]{droplet.name}[/] ip: [cyan]{droplet.ip_address}[/] want to continue?"
     )
 
     if Prompt.ask(msg, choices=["Y", "N"], default='n').upper() == "Y":
-        test.delete_test_droplet()
+        do.droplet.delete(droplet)
