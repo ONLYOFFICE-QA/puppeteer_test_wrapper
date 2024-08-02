@@ -11,7 +11,6 @@ from test import PuppeteerTest
 def run_test(
         c,
         save_droplet: bool = False,
-        firefox: bool = False,
         retries: int = None,
         threads: int = None,
         url_param: str = None,
@@ -26,7 +25,7 @@ def run_test(
         "prcache": prcache
     }
 
-    PuppeteerTest(firefox=firefox, flags=puppeteer_flags).run(save_droplet=save_droplet)
+    PuppeteerTest(flags=puppeteer_flags).run(save_droplet=save_droplet)
 
 @task
 def create_droplet(c):
