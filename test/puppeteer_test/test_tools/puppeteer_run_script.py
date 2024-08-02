@@ -4,7 +4,6 @@ from rich import print
 from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
 
 from posixpath import join, basename, dirname
-from tempfile import gettempdir
 
 from .paths import Paths
 

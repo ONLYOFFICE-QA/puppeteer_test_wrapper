@@ -5,7 +5,7 @@ from ssh_wrapper import Ssh, SshException
 from ssh_wrapper.data import CommandOutput
 from rich.console import Console
 
-from test.puppeteer_test.test_tools.linux_script_demon import LinuxScriptDemon
+from .linux_script_demon import LinuxScriptDemon
 
 console = Console()
 print = console.print

@@ -3,7 +3,6 @@ from os.path import join, isfile, basename, exists
 from rich import print
 
 from host_tools import File, Dir
-from tempfile import gettempdir
 
 from ssh_wrapper import Sftp
 

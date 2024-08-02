@@ -8,10 +8,9 @@ from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
 
 from digitalocean_wrapper import DigitalOceanWrapper
-from data import DropletConfig, PuppeteerFireFoxConfig, PuppeteerChromeConfig
+from data import DropletConfig, PuppeteerFireFoxConfig, PuppeteerChromeConfig, droplet_exists, TestException
 from .document_server import DocumentServer
 from .Uploader import Uploader
-from .decorators import droplet_exists
 from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
 from .puppeteer_run_script import PuppeteerRunScript
@@ -19,8 +18,6 @@ from .report import Report
 from .ssh_executer import SshExecuter
 from .digitalocean_ssh_key import DigitalOceanSshKey
 
-
-class TestException(Exception): ...
 
 class TestTools:
     """
@@ -154,7 +151,9 @@ class TestTools:
                 f"Retrying num: {self.retry_num}."
             )
             if self.retry_num == 0:
-                raise TestException(f"|ERROR| Puppeteer's test ended with a failure of the exit code {exit_code}")
+                raise TestException(
+                    f"[red]|ERROR| Puppeteer's test ended with a failure of the exit code [cyan]{exit_code}[/]"
+                )
 
             self.retry_num -= 1
             return False
