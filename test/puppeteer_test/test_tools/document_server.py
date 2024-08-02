@@ -39,21 +39,31 @@ class DocumentServer:
         return None
 
     def check_example_is_up(self) -> bool:
+        """
+        Check if the DocumentServer example page is up and running.
+
+        This method constructs the URL for the example page based on the parsed URL of the DocumentServer instance.
+        It sends a GET request to this URL and checks the response status code. If the response status code is 200,
+        it prints an informational message and returns True. Otherwise, it raises a DocumentServerError with an
+        appropriate error message.
+
+        :return: True if the example page is up (status code 200), False otherwise.
+        :raises DocumentServerError: If the example page responds with a status code other than 200.
+        """
         example_url = f"{self.parsed_url.scheme}://{self.parsed_url.netloc}/example/"
 
         response = self._request_get(example_url)
-        if response.status_code == 200:
+        if response and response.status_code == 200:
             print(
                 f"[green]|INFO| DocumentServer Example [cyan]{Str.delete_last_slash(example_url)}[/] is up. "
                 f"Status Code: [cyan]{response.status_code}[/]"
             )
             return True
 
-        print(
+        raise DocumentServerError(
             f"[red]|ERROR| DocumentServer Example [cyan]{Str.delete_last_slash(example_url)}[/] "
             f"responded with status code: [cyan]{response.status_code}[/]"
         )
-        raise DocumentServerError
 
     def _get_sdk_all_js_content(self) -> Optional[str]:
         """
@@ -64,12 +74,21 @@ class DocumentServer:
         sdk_all_url = f"{self.parsed_url.scheme}://{self.parsed_url.netloc}/{self.sdk_link}"
 
         response = self._request_get(sdk_all_url)
-        if response.status_code == 200:
+        if response and response.status_code == 200:
             return response.text
         return None
 
     @staticmethod
     def _request_get(url: str) -> Optional[requests.Response]:
+        """
+        Sends a GET request to the specified URL and returns the response.
+
+        This method attempts to connect to the given URL and handle any connection or request errors.
+        It prints an error message if the connection fails or if any other request error occurs.
+
+        :param url: The URL to send the GET request to.
+        :return: The response object if the request is successful; None otherwise.
+        """
         try:
             return requests.get(url)
 
