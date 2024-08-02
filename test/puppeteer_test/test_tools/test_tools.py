@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 
 from host_tools import Dir
 from rich import print
@@ -52,7 +53,7 @@ class TestTools:
         self.droplet = None
         self.retry_num = 2
 
-        self._create_tmp_dir()
+        self._prepare_tmp_dir()
 
 
     def create_test_droplet(self):
@@ -105,9 +106,8 @@ class TestTools:
             ssh_executer = SshExecuter(ssh, linux_service=self.linux_service)
             uploader = Uploader(sftp, self.puppeteer_config, self.linux_service, self.puppeteer_run_script)
 
-            uploader.upload_test_files()
-
             if not ssh_executer.check_service_status():
+                uploader.upload_test_files()
                 ssh_executer.start_script_service()
 
             ssh_executer.wait_execute_service(interval=2)
@@ -123,16 +123,29 @@ class TestTools:
         """
         self.report.convert_paths_to_relative()
 
-    def _create_tmp_dir(self) -> None:
+    def _prepare_tmp_dir(self) -> None:
         """
-        Create and return a temporary directory for storing script and other files.
-        :return: The path to the temporary directory.
+        Create a temporary directory for storing script and other files.
+
+        If the directory already exists, it will be deleted first. The deletion process will handle any permission issues by
+        changing the permissions of the files and directories to ensure they can be removed.
+
+        :return: None
         """
-        Dir.delete(self.path.tmp_dir, stdout=False, stderr=False)
+        if os.path.isdir(self.path.tmp_dir):
+            onerror_handler = lambda func, path, exc_info: (os.chmod(path, 0o777), func(path))
+            shutil.rmtree(self.path.tmp_dir, onerror=onerror_handler)
+
         Dir.create(self.path.tmp_dir, stdout=False)
 
-
     def _check_service_exit_code(self, exit_code: int) -> bool:
+        """
+        Checks the exit code of a service and handles failure cases.
+
+        :param exit_code: The exit code returned by the service.
+        :return: `True` if the exit code indicates success, otherwise `False`.
+        :raises TestException: If the exit code indicates a failure and no retries are left.
+        """
         if exit_code == 1:
             print(
                 f"[red]|WARNING| Script ended with a failure of the exit code {exit_code}."

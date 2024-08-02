@@ -26,7 +26,6 @@ class ConfigModel(BaseModel):
     DROPLET_IMAGE: str
     DROPLET_SIZE: str
     DEFAULT_USER: str
-    SSH_DO_USER_NAME: str
     DO_PROJECT_NAME: str
 
 
@@ -46,14 +45,14 @@ class DropletConfig:
         droplet_name_pattern (str): The pattern that the droplet name must follow.
     """
     def __init__(self, config_path: str = join(getcwd(), 'configs', 'droplet_config.json')):
+        self.config_path = config_path
         self.droplet_name_pattern = "droplets-starter-"
-        self._config = self._load_config(config_path)
+        self._config = self._load_config(self.config_path)
         self.name = self._get_droplet_name()
         self.region = self._config.DROPLET_REGION
         self.image = self._config.DROPLET_IMAGE
         self.size = self._config.DROPLET_SIZE
         self.default_user = self._config.DEFAULT_USER
-        self.ssh_do_user_name = self._config.SSH_DO_USER_NAME
         self.do_project_name = self._config.DO_PROJECT_NAME
         self._verify_droplet_name_pattern()
 
