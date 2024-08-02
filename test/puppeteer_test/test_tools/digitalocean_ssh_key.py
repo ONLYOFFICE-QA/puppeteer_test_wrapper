@@ -95,7 +95,7 @@ class DigitalOceanSshKey:
                 f"[red]Enter the name of the ssh key at path [cyan]{self.local_ssh_key_path}[/] to add to DigitalOcean"
             )
             if ssh_key_name in existing_keys:
-                print(f"[bold red]|ERROR| A key named {ssh_key_name} already exists. Enter another name.")
+                print(f"[bold red]|ERROR| A key named [cyan]{ssh_key_name}[/] already exists. Enter another name.")
             else:
                 return ssh_key_name
 
