@@ -40,6 +40,8 @@ class TestTools:
         self.path = Paths()
         self.puppeteer_config = puppeteer_config
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
+        self.ds.check_example_is_up()
+
         self.do = DigitalOceanWrapper()
         self.droplet_config = DropletConfig()
 
