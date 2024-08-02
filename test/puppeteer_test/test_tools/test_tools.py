@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 
-from host_tools.utils import Dir
+from host_tools import Dir
 from rich import print
 from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
@@ -16,6 +17,7 @@ from .linux_script_demon import LinuxScriptDemon
 from .puppeteer_run_script import PuppeteerRunScript
 from .report import Report
 from .ssh_executer import SshExecuter
+from .digitalocean_ssh_key import DigitalOceanSshKey
 
 
 class TestException(Exception): ...
@@ -40,13 +42,18 @@ class TestTools:
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
         self.do = DigitalOceanWrapper()
         self.droplet_config = DropletConfig()
+
         self.linux_service = LinuxScriptDemon(self.path.remote_puppeter_run_sh, user=self.droplet_config.default_user)
         self.puppeteer_run_script = PuppeteerRunScript(self.puppeteer_config, flags=flags)
+
+        self.do_ssh_keys_id = DigitalOceanSshKey(self.droplet_config, self.do).get_keys_id()
         self.ds_version = self.ds.get_version()
         self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser)
+
         self.droplet = None
         self.retry_num = 2
-        self._create_tmp_dir()
+
+        self._prepare_tmp_dir()
 
 
     def create_test_droplet(self):
@@ -62,7 +69,7 @@ class TestTools:
             size_slug=self.droplet_config.size,
             region=self.droplet_config.region,
             image=self.droplet_config.image,
-            ssh_keys=self._get_do_ssh_keys(),
+            ssh_keys=self.do_ssh_keys_id,
             wait_until_up=True
         )
 
@@ -99,9 +106,8 @@ class TestTools:
             ssh_executer = SshExecuter(ssh, linux_service=self.linux_service)
             uploader = Uploader(sftp, self.puppeteer_config, self.linux_service, self.puppeteer_run_script)
 
-            uploader.upload_test_files()
-
             if not ssh_executer.check_service_status():
+                uploader.upload_test_files()
                 ssh_executer.start_script_service()
 
             ssh_executer.wait_execute_service(interval=2)
@@ -117,15 +123,29 @@ class TestTools:
         """
         self.report.convert_paths_to_relative()
 
-    def _create_tmp_dir(self) -> None:
+    def _prepare_tmp_dir(self) -> None:
         """
-        Create and return a temporary directory for storing script and other files.
-        :return: The path to the temporary directory.
+        Create a temporary directory for storing script and other files.
+
+        If the directory already exists, it will be deleted first. The deletion process will handle any permission issues by
+        changing the permissions of the files and directories to ensure they can be removed.
+
+        :return: None
         """
-        os.makedirs(self.path.tmp_dir, exist_ok=True)
-        Dir.delete(self.path.tmp_dir, clear_dir=True)
+        if os.path.isdir(self.path.tmp_dir):
+            onerror_handler = lambda func, path, exc_info: (os.chmod(path, 0o777), func(path))
+            shutil.rmtree(self.path.tmp_dir, onerror=onerror_handler)
+
+        Dir.create(self.path.tmp_dir, stdout=False)
 
     def _check_service_exit_code(self, exit_code: int) -> bool:
+        """
+        Checks the exit code of a service and handles failure cases.
+
+        :param exit_code: The exit code returned by the service.
+        :return: `True` if the exit code indicates success, otherwise `False`.
+        :raises TestException: If the exit code indicates a failure and no retries are left.
+        """
         if exit_code == 1:
             print(
                 f"[red]|WARNING| Script ended with a failure of the exit code {exit_code}."
@@ -138,17 +158,3 @@ class TestTools:
             return False
 
         return True
-
-    def _get_do_ssh_keys(self) -> list:
-        """
-        Retrieve the list of SSH key IDs to be used for the DigitalOcean droplet.
-        :return: A list of SSH key IDs.
-        """
-        if self.droplet_config.ssh_do_user_name:
-            ssh_key_id = self.do.ssh_key.get_id_by_name(self.droplet_config.ssh_do_user_name)
-            if ssh_key_id:
-                return [ssh_key_id]
-
-            raise ValueError(f"|ERROR| Ssh key not found by name {self.droplet_config.ssh_do_user_name}")
-
-        raise ValueError(f"|ERROR| You need to specify the name of the SSH key configured on DigitalOcean")

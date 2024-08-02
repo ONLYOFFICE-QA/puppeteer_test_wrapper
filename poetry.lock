@@ -448,7 +448,7 @@ rich = "*"
 type = "git"
 url = "https://github.com/l8556/digitalocean_wrapper.git"
 reference = "master"
-resolved_reference = "0667e921f63aff605697e736f0a7f4402913d9fc"
+resolved_reference = "0dc6be300dd1cdee463a7e850316eeb356a49764"
 
 [[package]]
 name = "distro"
@@ -482,7 +482,7 @@ rich = "*"
 type = "git"
 url = "https://github.com/l8556/host_tools.git"
 reference = "master"
-resolved_reference = "d3279902605554cf1e1c7c61ec3a377151bd969e"
+resolved_reference = "6b70d64450c65bc4612daa993fd1b4d26b2f2357"
 
 [[package]]
 name = "idna"
