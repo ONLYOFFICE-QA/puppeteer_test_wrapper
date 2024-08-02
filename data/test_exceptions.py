@@ -10,12 +10,7 @@ class TestException(Exception):
         print(f"[bold red]{self.__class__.__name__}[/bold red] {self.message}")
         return ''
 
-
-class DigitalOceanSshKeyError(TestException):
-    """
-    Exception raised when there is an error retrieving or creating an SSH key on DigitalOcean.
-    """
-    pass
+class DigitalOceanSshKeyError(TestException): ...
 
 class PuppeteerChromeConfigError(TestException): ...
 
