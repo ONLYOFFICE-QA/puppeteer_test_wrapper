@@ -7,14 +7,8 @@ from rich import print
 from digitalocean_wrapper import DigitalOceanWrapper
 from rich.prompt import Prompt
 
-from data import DropletConfig
+from data import DropletConfig, DigitalOceanSshKeyError
 
-
-class DigitalOceanSshKeyError(Exception):
-    """
-    Exception raised when there is an error retrieving or creating an SSH key on DigitalOcean.
-    """
-    pass
 
 class DigitalOceanSshKey:
     """
