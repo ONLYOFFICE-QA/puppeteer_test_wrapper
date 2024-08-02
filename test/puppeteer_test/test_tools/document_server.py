@@ -39,6 +39,17 @@ class DocumentServer:
         return None
 
     def check_example_is_up(self) -> bool:
+        """
+        Check if the DocumentServer example page is up and running.
+
+        This method constructs the URL for the example page based on the parsed URL of the DocumentServer instance.
+        It sends a GET request to this URL and checks the response status code. If the response status code is 200,
+        it prints an informational message and returns True. Otherwise, it raises a DocumentServerError with an
+        appropriate error message.
+
+        :return: True if the example page is up (status code 200), False otherwise.
+        :raises DocumentServerError: If the example page responds with a status code other than 200.
+        """
         example_url = f"{self.parsed_url.scheme}://{self.parsed_url.netloc}/example/"
 
         response = self._request_get(example_url)
@@ -49,11 +60,10 @@ class DocumentServer:
             )
             return True
 
-        print(
+        raise DocumentServerError(
             f"[red]|ERROR| DocumentServer Example [cyan]{Str.delete_last_slash(example_url)}[/] "
             f"responded with status code: [cyan]{response.status_code}[/]"
         )
-        raise DocumentServerError
 
     def _get_sdk_all_js_content(self) -> Optional[str]:
         """
