@@ -22,6 +22,8 @@ uploading necessary files, and handling reports.
 
 ## Installation
 
+- Generate an ssh key if it does not exist at the path
+`~/.ssh/id_rsa.pub` with the command: `ssh-keygen -t rsa`.
 - Place your DigitalOcean API key in a file at the path
 `~/.do/access_token`
 - Installing the package manager poetry.
