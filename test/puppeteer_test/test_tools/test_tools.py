@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from host_tools import File
 from host_tools.utils import Dir
 from rich import print
 from ssh_wrapper import Ssh, Sftp, ServerData
@@ -16,6 +17,7 @@ from .linux_script_demon import LinuxScriptDemon
 from .puppeteer_run_script import PuppeteerRunScript
 from .report import Report
 from .ssh_executer import SshExecuter
+from .digitalocean_ssh_key import DigitalOceanSshKey
 
 
 class TestException(Exception): ...
@@ -40,12 +42,17 @@ class TestTools:
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
         self.do = DigitalOceanWrapper()
         self.droplet_config = DropletConfig()
+
         self.linux_service = LinuxScriptDemon(self.path.remote_puppeter_run_sh, user=self.droplet_config.default_user)
         self.puppeteer_run_script = PuppeteerRunScript(self.puppeteer_config, flags=flags)
+
+        self.do_ssh_keys_id = DigitalOceanSshKey(self.droplet_config, self.do).get_keys_id()
         self.ds_version = self.ds.get_version()
         self.report = Report(version=self.ds_version, browser=self.puppeteer_config.browser)
+
         self.droplet = None
         self.retry_num = 2
+
         self._create_tmp_dir()
 
 
@@ -62,7 +69,7 @@ class TestTools:
             size_slug=self.droplet_config.size,
             region=self.droplet_config.region,
             image=self.droplet_config.image,
-            ssh_keys=self._get_do_ssh_keys(),
+            ssh_keys=self.do_ssh_keys_id,
             wait_until_up=True
         )
 
@@ -122,8 +129,9 @@ class TestTools:
         Create and return a temporary directory for storing script and other files.
         :return: The path to the temporary directory.
         """
-        os.makedirs(self.path.tmp_dir, exist_ok=True)
-        Dir.delete(self.path.tmp_dir, clear_dir=True)
+        Dir.delete(self.path.tmp_dir, stdout=False, stderr=False)
+        Dir.create(self.path.tmp_dir, stdout=False)
+
 
     def _check_service_exit_code(self, exit_code: int) -> bool:
         if exit_code == 1:
@@ -138,17 +146,3 @@ class TestTools:
             return False
 
         return True
-
-    def _get_do_ssh_keys(self) -> list:
-        """
-        Retrieve the list of SSH key IDs to be used for the DigitalOcean droplet.
-        :return: A list of SSH key IDs.
-        """
-        if self.droplet_config.ssh_do_user_name:
-            ssh_key_id = self.do.ssh_key.get_id_by_name(self.droplet_config.ssh_do_user_name)
-            if ssh_key_id:
-                return [ssh_key_id]
-
-            raise ValueError(f"|ERROR| Ssh key not found by name {self.droplet_config.ssh_do_user_name}")
-
-        raise ValueError(f"|ERROR| You need to specify the name of the SSH key configured on DigitalOcean")

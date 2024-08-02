@@ -12,7 +12,7 @@ invoke = "^2.2.0"
 python-digitalocean = "^1.17.0"
 host-tools = { git = "https://github.com/l8556/host_tools.git", branch = "master" }
 ssh-wrapper = { git = "https://github.com/l8556/SshWrapper.git", branch = "master" }
-digitalocean-wrapper = { git = "https://github.com/l8556/digitalocean_wrapper.git", branch = "master" }
+digitalocean-wrapper = { git = "https://github.com/l8556/digitalocean_wrapper.git", branch = "fix/create_ssh_key" }
 pydantic = "^2"
 beautifulsoup4 = "^4.12.3"
 
