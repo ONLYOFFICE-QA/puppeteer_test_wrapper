@@ -114,7 +114,12 @@ class SshExecuter:
         :return: The service log entries.
         """
         command = f'sudo journalctl -n {line_num} -u {self.linux_service.name}'
-        return self.exec_cmd(command, stdout=False, stderr=False).stdout
+        out = self.exec_cmd(command, stdout=False, stderr=False)
+
+        if out.exit_code == 0:
+            return out.stdout
+
+        return ''
 
     def exec_cmd(self, cmd: str, stdout=True, stderr=True) -> CommandOutput:
         """

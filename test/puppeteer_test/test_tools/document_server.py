@@ -53,7 +53,7 @@ class DocumentServer:
         example_url = f"{self.parsed_url.scheme}://{self.parsed_url.netloc}/example/"
 
         response = self._request_get(example_url)
-        if response.status_code == 200:
+        if response and response.status_code == 200:
             print(
                 f"[green]|INFO| DocumentServer Example [cyan]{Str.delete_last_slash(example_url)}[/] is up. "
                 f"Status Code: [cyan]{response.status_code}[/]"
@@ -74,12 +74,21 @@ class DocumentServer:
         sdk_all_url = f"{self.parsed_url.scheme}://{self.parsed_url.netloc}/{self.sdk_link}"
 
         response = self._request_get(sdk_all_url)
-        if response.status_code == 200:
+        if response and response.status_code == 200:
             return response.text
         return None
 
     @staticmethod
     def _request_get(url: str) -> Optional[requests.Response]:
+        """
+        Sends a GET request to the specified URL and returns the response.
+
+        This method attempts to connect to the given URL and handle any connection or request errors.
+        It prints an error message if the connection fails or if any other request error occurs.
+
+        :param url: The URL to send the GET request to.
+        :return: The response object if the request is successful; None otherwise.
+        """
         try:
             return requests.get(url)
 
