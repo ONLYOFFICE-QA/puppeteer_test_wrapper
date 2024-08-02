@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from host_tools import File
-from host_tools.utils import Dir
+from host_tools import Dir
 from rich import print
 from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
