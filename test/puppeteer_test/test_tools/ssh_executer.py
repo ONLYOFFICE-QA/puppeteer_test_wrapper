@@ -87,7 +87,7 @@ class SshExecuter:
         cmd = f'systemctl is-active {self.linux_service.name}'
         return self.exec_cmd(cmd, stdout=False).stdout.lower() == status
 
-    def get_demon_log(self, line_num: str | int = 20) -> str:
+    def get_service_log(self, line_num: str | int = 20) -> str:
         """
         Retrieve the log entries for the service from the journal.
 
@@ -95,8 +95,7 @@ class SshExecuter:
         :return: The service log entries.
         """
         command = f'sudo journalctl -n {line_num} -u {self.linux_service.name}'
-        out = self.exec_cmd(command, stdout=False, stderr=False)
-        return out.stdout if out.exit_code == 0 else ''
+        return self.exec_cmd(command, stdout=False, stderr=False).stdout
 
 
     def exec_cmd(self, cmd: str, stdout=True, stderr=True) -> CommandOutput:

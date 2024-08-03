@@ -141,14 +141,14 @@ class TestTools:
                     if service_status and service_status != active_status.lower():
                         return print(
                             f"[blue]{line}\n|INFO| Service {self.linux_service.name} log:\n"
-                            f"{line}\n\n{ssh_executer.get_demon_log(1000)}\n{line}\n\n"
+                            f"{line}\n\n{ssh_executer.get_service_log(1000)}\n{line}\n\n"
                             f"[green]|INFO||{ssh.server.ip}| Service [cyan]{self.linux_service.name}[/] "
                             f"deactivated with status [cyan]{service_status}[/]. "
                             f"Exit Code: [cyan]{ssh_executer.get_service_exit_code()}[/] "
                             f"Exit Status Code: [cyan]{ssh_executer.get_service_exit_status()}[/]"
                         )
 
-                    status.update(f"{msg}\n{ssh_executer.get_demon_log(line_num=20)}")
+                    status.update(f"{msg}\n{ssh_executer.get_service_log(line_num=20)}")
                     time.sleep(wait_interval)
 
     @droplet_exists
