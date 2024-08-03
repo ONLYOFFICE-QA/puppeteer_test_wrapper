@@ -6,7 +6,7 @@ from data import PuppeteerChromeConfig
 
 class PuppeteerTest:
 
-    def __init__(self, flags: dict = None, firefox: bool = False):
+    def __init__(self, flags: dict = None):
         self.puppeteer_config = PuppeteerChromeConfig()
         self.test = TestTools(puppeteer_config=self.puppeteer_config, flags=flags)
 
