@@ -5,7 +5,7 @@ from posixpath import join
 from typing import Union
 
 
-from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
+from data import PuppeteerChromeConfig
 from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
 
@@ -21,7 +21,7 @@ class Uploader:
     def __init__(
             self,
             sftp: Sftp,
-            puppeteer_config: Union[PuppeteerFireFoxConfig, PuppeteerChromeConfig],
+            puppeteer_config: Union[PuppeteerChromeConfig],
             linux_service: LinuxScriptDemon,
             puppeteer_run_script: PuppeteerRunScript
     ):

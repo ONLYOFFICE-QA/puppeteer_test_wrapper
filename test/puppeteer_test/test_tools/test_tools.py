@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+import time
 
 from host_tools import Dir
-from rich import print
+from rich.console import Console
 from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
 
 from digitalocean_wrapper import DigitalOceanWrapper
-from data import DropletConfig, PuppeteerFireFoxConfig, PuppeteerChromeConfig, droplet_exists, TestException
+from data import DropletConfig, PuppeteerChromeConfig, droplet_exists, TestException, SSHConfig
 from .document_server import DocumentServer
 from .Uploader import Uploader
 from .paths import Paths
@@ -19,6 +20,10 @@ from .ssh_executer import SshExecuter
 from .digitalocean_ssh_key import DigitalOceanSshKey
 
 
+console = Console()
+print = console.print
+
+
 class TestTools:
     """
     A class to manage testing tools and operations for setting up and running Puppeteer scripts on a DigitalOcean droplet.
@@ -26,7 +31,7 @@ class TestTools:
 
     def __init__(
             self,
-            puppeteer_config: Union[PuppeteerChromeConfig, PuppeteerFireFoxConfig],
+            puppeteer_config: Union[PuppeteerChromeConfig],
             flags: list = None
     ):
         """
@@ -34,6 +39,7 @@ class TestTools:
         :param puppeteer_config: Configuration for Puppeteer, specifying the browser and other settings.
         :param flags: A list of flags to pass to the Puppeteer script. Defaults to None.
         """
+        self.ssh_config = SSHConfig()
         self.path = Paths()
         self.puppeteer_config = puppeteer_config
         self.ds = DocumentServer(self.puppeteer_config.ds_url)
@@ -109,11 +115,47 @@ class TestTools:
                 uploader.upload_test_files()
                 ssh_executer.start_script_service()
 
-            ssh_executer.wait_execute_service(interval=2)
+    @droplet_exists
+    def wait_execute_script(self, active_status: str = 'active') -> None:
+        """
+        Waits for the execution of the specified Linux service on the droplet.
 
-            if not self._check_service_exit_code(exit_code=ssh_executer.get_service_exit_code()):
-                self.run_script_on_droplet()
+        This method continuously checks the status of the specified Linux service on the droplet,
+        waiting for it to change from the active status. If the service becomes inactive or deactivates,
+        it prints the service's log, exit code, and exit status code.
 
+        :param active_status: The status indicating that the service is active. Default is 'active'.
+        """
+        wait_interval = self.ssh_config.wait_execution_time or 60
+        msg = f"[cyan]|INFO| Waiting for execute {self.linux_service.name}. Wait interval: {wait_interval}"
+        line = '-' * 90
+        print(f"[bold cyan]{line}\n{msg}\n{line}")
+
+        with console.status(msg) as status:
+            while True:
+                with Ssh(ServerData(self.get_droplet_ip(), self.droplet_config.default_user)) as ssh:
+                    ssh_executer = SshExecuter(ssh, linux_service=self.linux_service)
+                    out = ssh_executer.get_service_status()
+                    service_status = out.stdout.lower() if out.stdout else None
+
+                    if service_status and service_status != active_status.lower():
+                        return print(
+                            f"[blue]{line}\n|INFO| Service {self.linux_service.name} log:\n"
+                            f"{line}\n\n{ssh_executer.get_demon_log(1000)}\n{line}\n\n"
+                            f"[green]|INFO| Service deactivated with status [cyan]{service_status}[/]. "
+                            f"Exit Code: [cyan]{ssh_executer.get_service_exit_code()}[/] "
+                            f"Exit Status Code: [cyan]{ssh_executer.get_service_exit_status()}[/]"
+                        )
+
+                    status.update(f"{msg}\n{ssh_executer.get_demon_log(line_num=20)}")
+                    time.sleep(wait_interval)
+
+    @droplet_exists
+    def download_report(self):
+        """
+        Downloads a report from the droplet using SFTP.
+        """
+        with Sftp(ServerData(self.get_droplet_ip(), self.droplet_config.default_user)) as sftp:
             self.report.download(sftp)
 
     def handle_report(self):
