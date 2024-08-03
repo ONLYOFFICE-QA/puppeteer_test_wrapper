@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Union
 from rich import print
-from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
+from data import PuppeteerChromeConfig
 
 from posixpath import join, basename, dirname
 
@@ -15,7 +15,7 @@ class PuppeteerRunScript:
 
     def __init__(
             self,
-            config: Union[PuppeteerFireFoxConfig, PuppeteerChromeConfig],
+            config: Union[PuppeteerChromeConfig],
             script_dir: str = None,
             script_name: str = None,
             flags: dict = None

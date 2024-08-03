@@ -5,7 +5,7 @@ from posixpath import join
 from typing import Union
 
 
-from data import PuppeteerFireFoxConfig, PuppeteerChromeConfig
+from data import PuppeteerChromeConfig
 from .paths import Paths
 from .linux_script_demon import LinuxScriptDemon
 
@@ -21,7 +21,7 @@ class Uploader:
     def __init__(
             self,
             sftp: Sftp,
-            puppeteer_config: Union[PuppeteerFireFoxConfig, PuppeteerChromeConfig],
+            puppeteer_config: Union[PuppeteerChromeConfig],
             linux_service: LinuxScriptDemon,
             puppeteer_run_script: PuppeteerRunScript
     ):
@@ -46,7 +46,7 @@ class Uploader:
         """
         Upload all necessary files for running Puppeteer tests to the remote server.
         """
-        self._upload_puppeteer(self.sftp)
+        self._upload_puppeteer()
         self._upload(self.puppeteer_config.config_path, self.path.remote_puppeter_config_file)
         self._upload(self.puppeteer_run_script.create(), self.path.remote_puppeter_run_sh)
         self._upload(self._create_run_script_service(), self.remote_service_path)
@@ -66,11 +66,10 @@ class Uploader:
         """
         return self.linux_service.create(save_path=join(self.path.tmp_dir, self.linux_service.name))
 
-    def _upload_puppeteer(self, sftp: Sftp) -> None:
+    def _upload_puppeteer(self) -> None:
         """
         Prepare and upload the Puppeteer repository to the remote server.
-        :param sftp: An instance of Sftp for handling file transfers.
         """
         self.puppeter_repo.clone()
         File.compress(self.path.local_puppeteer_dir, self.path.local_puppeteer_archive, stdout=True)
-        sftp.upload_file(self.path.local_puppeteer_archive, self.path.remote_puppeteer_archive)
+        self._upload(self.path.local_puppeteer_archive, self.path.remote_puppeteer_archive)

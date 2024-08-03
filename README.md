@@ -65,6 +65,12 @@ Example: `"root"`
 `DO_PROJECT_NAME` - (Optional) The name of the project in
 DigitalOcean where the droplet will be moved to.
 
+### ssh_config.json - to configure parameters for SSH session
+
+`wait_execution_time` - (integer) Defines the waiting time interval
+(in seconds) between checks for the status of a service on the server.
+The default value is set to 60 seconds.
+
 ### puppeteer_chrome_config.json - Configuration file required to run puppeteer tests
 
 Read more about the parameters [Puppeter Configuration Setup](https://github.com/ONLYOFFICE/Dep.Tests/tree/master/puppeteer#configuration-setup)
