@@ -9,7 +9,7 @@ from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
 
 from digitalocean_wrapper import DigitalOceanWrapper
-from data import DropletConfig, PuppeteerChromeConfig, droplet_exists, TestException, SSHConfig
+from data import DropletConfig, PuppeteerChromeConfig, droplet_exists, SSHConfig
 from .document_server import DocumentServer
 from .Uploader import Uploader
 from .paths import Paths
@@ -127,7 +127,7 @@ class TestTools:
         :param active_status: The status indicating that the service is active. Default is 'active'.
         """
         wait_interval = self.ssh_config.wait_execution_time or 60
-        msg = f"[cyan]|INFO| Waiting for execute {self.linux_service.name}. Wait interval: {wait_interval}"
+        msg = f"[cyan]|INFO| Waiting for execute {self.linux_service.name}. Wait interval: {wait_interval} seconds"
         line = '-' * 90
         print(f"[bold cyan]{line}\n{msg}\n{line}")
 
@@ -142,7 +142,8 @@ class TestTools:
                         return print(
                             f"[blue]{line}\n|INFO| Service {self.linux_service.name} log:\n"
                             f"{line}\n\n{ssh_executer.get_demon_log(1000)}\n{line}\n\n"
-                            f"[green]|INFO| Service deactivated with status [cyan]{service_status}[/]. "
+                            f"[green]|INFO||{ssh.server.ip}| Service [cyan]{self.linux_service.name}[/] "
+                            f"deactivated with status [cyan]{service_status}[/]. "
                             f"Exit Code: [cyan]{ssh_executer.get_service_exit_code()}[/] "
                             f"Exit Status Code: [cyan]{ssh_executer.get_service_exit_status()}[/]"
                         )
@@ -178,26 +179,3 @@ class TestTools:
             shutil.rmtree(self.path.tmp_dir, onerror=onerror_handler)
 
         Dir.create(self.path.tmp_dir, stdout=False)
-
-    def _check_service_exit_code(self, exit_code: int) -> bool:
-        """
-        Checks the exit code of a service and handles failure cases.
-
-        :param exit_code: The exit code returned by the service.
-        :return: `True` if the exit code indicates success, otherwise `False`.
-        :raises TestException: If the exit code indicates a failure and no retries are left.
-        """
-        if exit_code == 1:
-            print(
-                f"[red]|WARNING| Script ended with a failure of the exit code {exit_code}."
-                f"Retrying num: {self.retry_num}."
-            )
-            if self.retry_num == 0:
-                raise TestException(
-                    f"[red]|ERROR| Puppeteer's test ended with a failure of the exit code [cyan]{exit_code}[/]"
-                )
-
-            self.retry_num -= 1
-            return False
-
-        return True

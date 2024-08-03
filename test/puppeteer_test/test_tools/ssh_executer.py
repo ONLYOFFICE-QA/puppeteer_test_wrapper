@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-import time
 from typing import Optional
 from ssh_wrapper import Ssh
 from ssh_wrapper.data import CommandOutput
-from rich.console import Console
 
 from .linux_script_demon import LinuxScriptDemon
 
-console = Console()
-print = console.print
+
 
 class SshExecuter:
     """
