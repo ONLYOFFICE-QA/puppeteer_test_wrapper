@@ -40,34 +40,27 @@ Configuration files are located in the directory `configs`
 
 ### droplet_config.json - to configure the parameters of the DigitalOcean Droplet
 
-Parameters:
-
-`DROPLET_NAME` - (Required) The name assigned to the DigitalOcean droplet.
+- `DROPLET_NAME` - (Required) The name assigned to the DigitalOcean droplet.
 Example: `"puppeteer-test"`
-
-`DROPLET_REGION` - (Required) The region where the DigitalOcean
+- `DROPLET_REGION` - (Required) The region where the DigitalOcean
 droplet will be created.
 Example: `"nyc3"` (New York 3)
-
-`DROPLET_IMAGE` - (Required) The image (operating system) to be used
+- `DROPLET_IMAGE` - (Required) The image (operating system) to be used
 for the DigitalOcean droplet.
 Example: `"ubuntu-24-04-x64"` (Ubuntu 24.04, 64-bit)
-
-`DROPLET_SIZE` - (Required) The size specification for
+- `DROPLET_SIZE` - (Required) The size specification for
 the DigitalOcean droplet,
 which determines its resources such as CPU and RAM.
 Example: `"s-1vcpu-1gb"` (1 vCPU, 1 GB RAM)
-
-`DEFAULT_USER` - (Required) The default user account to be
+- `DEFAULT_USER` - (Required) The default user account to be
 used for accessing the droplet.
 Example: `"root"`
-
-`DO_PROJECT_NAME` - (Optional) The name of the project in
+- `DO_PROJECT_NAME` - (Optional) The name of the project in
 DigitalOcean where the droplet will be moved to.
 
 ### ssh_config.json - to configure parameters for SSH session
 
-`wait_execution_time` - (integer) Defines the waiting time interval
+- `wait_execution_time` - (integer) Defines the waiting time interval
 (in seconds) between checks for the status of a service on the server.
 The default value is set to 60 seconds.
 
