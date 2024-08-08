@@ -40,7 +40,7 @@ Configuration files are located in the directory `configs`
 
 ### droplet_config.json - to configure the parameters of the DigitalOcean Droplet
 
-Parameters:
+#### Parameters:
 
 - `DROPLET_NAME` - (Required) The name assigned to the DigitalOcean droplet.
 Example: `"puppeteer-test"`
@@ -62,7 +62,9 @@ DigitalOcean where the droplet will be moved to.
 
 ### ssh_config.json - to configure parameters for SSH session
 
-`wait_execution_time` - (integer) Defines the waiting time interval
+#### Parameters:
+
+- `wait_execution_time` - (integer) Defines the waiting time interval
 (in seconds) between checks for the status of a service on the server.
 The default value is set to 60 seconds.
 
