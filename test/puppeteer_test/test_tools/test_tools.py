@@ -3,13 +3,14 @@ import os
 import shutil
 import time
 
-from host_tools import Dir
-from rich.console import Console
-from ssh_wrapper import Ssh, Sftp, ServerData
 from typing import Union
-
+from rich.console import Console
+from host_tools import Dir
+from ssh_wrapper import Ssh, Sftp, ServerData
 from digitalocean_wrapper import DigitalOceanWrapper
+
 from data import DropletConfig, PuppeteerChromeConfig, droplet_exists, SSHConfig
+
 from .document_server import DocumentServer
 from .Uploader import Uploader
 from .paths import Paths
@@ -79,7 +80,7 @@ class TestTools:
         )
 
     @droplet_exists
-    def move_to_user_project(self):
+    def move_droplet_to_user_project(self):
         """
         Move the created droplet to a specified project in DigitalOcean.
         """

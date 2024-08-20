@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from test.puppeteer_test.test_tools import TestTools
+from .test_tools import TestTools
 from rich import print
 from data import PuppeteerChromeConfig
 
@@ -17,7 +17,7 @@ class PuppeteerTest:
         )
 
         self.test.create_test_droplet()
-        self.test.move_to_user_project()
+        self.test.move_droplet_to_user_project()
         self.test.run_script_on_droplet()
         self.test.wait_execute_script()
         self.test.download_report()
