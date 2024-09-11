@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-rich = "^13.8.0"
+rich = "^13.8.1"
 invoke = "^2.2.0"
 host-tools = { git = "https://github.com/l8556/host_tools.git", branch = "master" }
 ssh-wrapper = { git = "https://github.com/l8556/SshWrapper.git", branch = "master" }
